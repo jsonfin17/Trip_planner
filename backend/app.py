@@ -1,6 +1,8 @@
 import sqlite3
 import csv
 import os
+import requests
+from flask import Flask, render_template, redirect, url_for, g, request, flash, session, send_from_directory, jsonify
 from flask import Flask, Response, render_template, redirect, url_for, g, request, flash, session, send_from_directory, json
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
@@ -64,6 +66,38 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+@app.route('/local-events')
+def events():
+    api_url = 'https://app.ticketmaster.com/discovery/v2/events.json?countryCode=AU&apikey=EbxJQ4zJdpA2AH8Rv6ONYPGfwsHsoKZA'
+    #api_key = '	EbxJQ4zJdpA2AH8Rv6ONYPGfwsHsoKZA'  # Replace with your actual Ticketmaster API key
+
+    # Make the request to the Ticketmaster API
+    response = requests.get(api_url)
+
+    if response.status_code == 200:
+        data = response.json()
+        aus_events = data.get('_embedded')
+        return jsonify(aus_events.get('events'))
+    else:
+        return jsonify({'error': 'Failed to fetch data from Ticketmaster API.'}), response.status_code
+
+
+@app.route('/preference')
+def preference():
+    if request.method == 'POST':
+        try:
+            username = session.get('user_id')
+            g.db = sqlite3.connect(database)
+            results = g.db.execute('SELECT activity_name, description FROM activity' ).fetchall()
+            for row in results:
+                print(row)
+            g.db.commit()
+            return redirect(url_for('login'))
+        except Exception as e:
+            print(e)
+            return redirect(url_for('register'))
+    return render_template('register.html')
 
 
 def check_login():
