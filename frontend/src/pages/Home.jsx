@@ -7,7 +7,6 @@ function Home() {
       <div className="bg-secondary text-center">
         <h1 className="text-primary">Travel-Planner</h1>
         <Form />
-        <PreferenceForm />
       </div>
     </>
   );
