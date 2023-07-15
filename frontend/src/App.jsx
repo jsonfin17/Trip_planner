@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import Form from "./components/Form";
 
 function App() {
+  useEffect(() => {
+    document.body.classList.add("bg-secondary");
+  }, []);
+
   return (
     <>
-      <div>
-        <h1 className="text-3xl font-bold underline">Travel-Planner</h1>
+      <div className="bg-secondary">
+        <h1 className="text-primary">Travel-Planner</h1>
         <Form />
       </div>
     </>
