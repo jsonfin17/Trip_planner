@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import Form from "./components/Form";
+import Home from "./pages/Home";
 import PreferenceForm from "./components/PreferenceForm";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   useEffect(() => {
@@ -12,11 +11,10 @@ function App() {
 
   return (
     <>
-      <div className="bg-secondary text-center">
-        <h1 className="text-primary">Travel-Planner</h1>
-        <Form />
-        <PreferenceForm />
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/choosePreference" element={<PreferenceForm />} />
+      </Routes>
     </>
   );
 }
