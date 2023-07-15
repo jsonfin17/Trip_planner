@@ -68,3 +68,7 @@ def logout():
 def check_login():
     user_id = session.get('user_id')
     return user_id != None
+
+
+if __name__ == '__main__':
+    app.run(debug = True)
