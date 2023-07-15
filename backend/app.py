@@ -1,6 +1,9 @@
 import sqlite3
 import csv
 import os
+from datetime import datetime
+
+import jwt
 import requests
 from flask import Flask, render_template, redirect, url_for, g, request, flash, session, send_from_directory, jsonify
 from flask import Flask, Response, render_template, redirect, url_for, g, request, flash, session, send_from_directory, json
@@ -16,6 +19,38 @@ dict = {'hello':'2', 'world':'1'}
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+def encode_auth_token(self, user_id):
+    """
+    Generates the Auth Token
+    :return: string
+    """
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        )
+    except Exception as e:
+        return e
+
+def decode_auth_token(auth_token):
+    """
+    Decodes the auth token
+    :param auth_token:
+    :return: integer|string
+    """
+    try:
+        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+        return payload['sub']
+    except jwt.ExpiredSignatureError:
+        return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+        return 'Invalid token. Please log in again.'
 
 
 @app.route('/')
@@ -29,18 +64,16 @@ def login():
         res = request.json
         username = res["username"]
         password = res['password']
-        # g.db = sqlite3.connect(database)
-        # correct_password = g.db.execute("SELECT password FROM user WHERE username = ?", (username, )).fetchone()
-        # if correct_password == None:
-        #     flash("The user isn't registered yet!")
-        # elif check_password_hash(correct_password[0], password):
-        #     flash("Login sucessfully!")
-        #     session['user_id'] = username
-        #     return redirect(url_for('index'))
-        # else:
-        #     print(correct_password, password)
-        #     flash("Password incorrect")
-    return "success", 200
+        g.db = sqlite3.connect(database)
+        correct_password = g.db.execute("SELECT password FROM user WHERE username = ?", (username, )).fetchone()
+        if correct_password == None:
+            return "The user isn't registered yet!", 401
+        elif check_password_hash(correct_password[0], password):
+            session['user_id'] = username
+            return "Login sucessfully!", 200
+        else:
+            print(correct_password, password)
+            return "Password incorrect", 401
 
 
 
@@ -54,18 +87,18 @@ def register():
             g.db = sqlite3.connect(database)
             g.db.execute('INSERT INTO user (username, password) VALUES (?, ?)', (username, generate_password_hash(password)))
             g.db.commit()
-            return redirect(url_for('login'))
+            return "success",200
         except Exception as e:
             print(e)
-            return redirect(url_for('register'))
-    return render_template('register.html')
+            return "2", 200
+    return "success",200
 
 
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    return "success", 200
 
 @app.route('/local-events')
 def events():
