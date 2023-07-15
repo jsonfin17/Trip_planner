@@ -4,6 +4,7 @@ import os
 from flask import Flask, render_template, redirect, url_for, g, request, flash, session, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
+from flask_cors import CORS
 
 database = 'trip.db'
 
@@ -13,6 +14,8 @@ dict = {'hello':'2', 'world':'1'}
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+CORS(app)
+
 
 
 
