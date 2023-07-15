@@ -1,6 +1,8 @@
 function PreferenceForm() {
+  const activities = ["Hiking", "Swimming", "Karoke", "Run", "Walk", "Fishing"];
+
   return (
-    <div className="text-text bg-primary">
+    <div className="mt-8 text-text bg-primary rounded-2xl">
       Activities
       <div class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
         <input

@@ -2,7 +2,7 @@ import useAuth from "../services/auth";
 import { useState } from "react";
 
 function Form() {
-  const { getUser } = useAuth();
+  const { getUser, Login } = useAuth();
 
   const currentUser = getUser();
 
