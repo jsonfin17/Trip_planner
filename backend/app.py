@@ -8,6 +8,9 @@ from werkzeug.utils import secure_filename
 database = 'trip.db'
 
 
+
+dict = {'hello':'2', 'world':'1'}
+
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
@@ -15,7 +18,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return dict['hello']
 
 
 @app.route('/login', methods=['post', 'get'])
@@ -72,3 +75,7 @@ def check_login():
 
 if __name__ == '__main__':
     app.run(debug = True)
+
+
+
+
