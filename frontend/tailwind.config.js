@@ -2,14 +2,15 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    colors: {
-      text: "#010404",
-      background: "#f3fbfb",
-      primary: "#1c5359",
-      secondary: "#c9eaee",
-      accent: "#38a6b2",
+    extend: {
+      colors: {
+        text: "#09050f",
+        background: "#e3d9f2",
+        primary: "#a8cf72",
+        secondary: "#d4efd1",
+        accent: "#b6ac3e",
+      },
     },
-    extend: {},
   },
   plugins: [],
 };
