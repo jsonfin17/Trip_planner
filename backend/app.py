@@ -21,7 +21,7 @@ def index():
     return dict['hello']
 
 
-@app.route('/login', methods=['post', 'get'])
+@app.route('/kdfjkrjljgkjg', methods=['post', 'get'])
 def login():
     if check_login():
         return redirect(url_for('index'))
@@ -66,6 +66,23 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+
+@app.route('/preference')
+def preference():
+    if request.method == 'POST':
+        try:
+            username = session.get('user_id')
+            g.db = sqlite3.connect(database)
+            results = g.db.execute('SELECT activity_name, description FROM activity' ).fetchall()
+            for row in results:
+                print(row)
+            g.db.commit()
+            return redirect(url_for('login'))
+        except Exception as e:
+            print(e)
+            return redirect(url_for('register'))
+    return render_template('register.html')
 
 
 def check_login():
