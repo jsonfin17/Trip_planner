@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import Home from "./pages/Home";
-import PreferenceForm from "./components/PreferenceForm";
+import PreferencePage from "./pages/PreferencePAge";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/choosePreference" element={<PreferenceForm />} />
+        <Route path="/choosePreference" element={<PreferencePage />} />
       </Routes>
     </>
   );

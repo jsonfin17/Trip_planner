@@ -1,5 +1,4 @@
 import Form from "../components/Form";
-import PreferenceForm from "../components/PreferenceForm";
 
 function Home() {
   return (
