@@ -1,10 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import useCollection from "../services/useCollection";
 import getUser from "../services/getUser";
+import emailjs from "@emailjs/browser";
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const EventCard = ({ event, user }) => {
   const [checkedUsers, setCheckedUsers] = useState([]);
+  const message = useRef("");
+  const [send, setSend] = useState(false);
+  const [alert, setAlert] = useState(<p></p>);
+
+  useEffect( () => {
+      setAlert(
+        <Box sx={{
+            width: '50%',
+            position: 'absolute',
+            top: 60,
+            left: '20%'
+        }}>
+            <Collapse in={send}>
+                <Alert
+                    severity="success"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setSend(false);
+                            }}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                >
+                    Successfully send email to your friend/s!
+                </Alert>
+            </Collapse>
+        </Box>
+    );
+  }, [send])
 
   // Function to toggle user's checked status
   const toggleCheckedUser = (user) => {
@@ -51,18 +92,22 @@ const EventCard = ({ event, user }) => {
     loadAllUsers();
   }, [allUsers]);
 
-  const sendEmail = async () => {
-    e.preventDefault();
-    const errors = validate(values);
-    if (errors && Object.keys(errors).length > 0) {
-      return setErrors(errors);
-    }
+  const sendEmail = async (from_user, to_user, message) => {
+    const templateParams = {
+      to_name: to_user.name,
+      to_email: to_user.email,
+      from_email: from_user.email,
+      from_name: user.name,
+      message: message,
+
+      // Add any other template variables you need for your email
+    };
 
     await emailjs
       .sendForm(
         "service_kxn71pt",
         "template_wtsmvnr",
-        form.current,
+        templateParams,
         "bbc4c12GJuBCsPiDl"
       )
       .then(() => {
@@ -76,8 +121,19 @@ const EventCard = ({ event, user }) => {
     setSuccess(true);
   };
 
+  const handleSendEmails = () => {
+    setSend(true);
+    console.log("send email called!");
+    // Iterate through the checkedUsers and call sendEmail for each user
+    checkedUsers.forEach((user) => {
+      console.log("sending email for ", user.name, "email is", user.email);
+      sendEmail(currentuser, user, message);
+    });
+  };
+
   return (
     <div>
+      {alert}
       {event ? (
         <div
           to={`/events/${event.name}`}
@@ -123,16 +179,19 @@ const EventCard = ({ event, user }) => {
               {event.priceRanges[0].type}
             </span>
           </div>
-          <div>
-            <span className="text-sm font-bold text-gray-700">
+          <div className="mt-2">
+            <span className="text-sm font-bold text-white">
               Friend's availble
             </span>
           </div>
           {allUsers
             .filter((user) => user.uid !== currentuser.user.uid)
-            .map((user) => {
+            .map((user, index) => {
               return (
-                <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                <span
+                  key={index}
+                  className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                >
                   <input
                     type="checkbox"
                     checked={checkedUsers.some(
@@ -145,12 +204,29 @@ const EventCard = ({ event, user }) => {
                 </span>
               );
             })}
-          <button className="text-sm font-bold text-gray-700">
-            Invite Friends
-          </button>
-          {checkedUsers.map((user) => {
-            return <span>{user.name}</span>;
+          <div className="mt-2">
+            <span className="text-sm font-bold text-white">
+              Who you're inviting
+            </span>
+          </div>
+          {checkedUsers.map((user, index) => {
+            return (
+              <span
+                key={index}
+                className="inline-flex items-center rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+              >
+                {user.name}
+              </span>
+            );
           })}
+          <div className="mt-2">
+            <button
+              className="bg-accent text-sm text-white font-bold py-2 px-4 rounded"
+              onClick={handleSendEmails}
+            >
+              Invite Friends
+            </button>
+          </div>
         </div>
       ) : (
         ""

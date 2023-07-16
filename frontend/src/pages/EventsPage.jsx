@@ -3,12 +3,14 @@ import getUser from "../services/getUser";
 import EventCard from "../components/EventCard";
 import { Navbar } from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
 
 function EventsPage() {
   const user = getUser();
   const navigate = useNavigate();
   const { getEvents } = useEvents();
+
 
   const events = getEvents();
   console.log("frontend events", events);
