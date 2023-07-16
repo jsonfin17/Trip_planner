@@ -19,11 +19,8 @@ function Home() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="font-bold text-gray-600 text-3xl text-extrabold md:text-4xl lg:text-5xl mt-8 uppercase text-center">
-          Event
-          <span className="px-2 text-white bg-cyan-600 rounded">Buddy</span>
-        </h1>
+      <div className="text-center">
+        <h1 className="text-primary">Travel-Planner</h1>
         <Form />
       </div>
     </>

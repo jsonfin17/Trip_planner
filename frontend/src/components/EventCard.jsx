@@ -3,51 +3,49 @@ import { Link } from "react-router-dom";
 import useCollection from "../services/useCollection";
 import getUser from "../services/getUser";
 import emailjs from "@emailjs/browser";
-import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const EventCard = ({ event, user }) => {
   const [checkedUsers, setCheckedUsers] = useState([]);
-  const message = useRef("Come to the concert ya bugger");
+  const message = useRef("");
   const [send, setSend] = useState(false);
   const [alert, setAlert] = useState(<p></p>);
 
-  useEffect(() => {
-    setAlert(
-      <Box
-        sx={{
-          width: "50%",
-          position: "absolute",
-          top: 60,
-          left: "20%",
-        }}
-      >
-        <Collapse in={send}>
-          <Alert
-            severity="success"
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setSend(false);
-                }}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-            sx={{ mb: 2 }}
-          >
-            Successfully send email to your friend/s!
-          </Alert>
-        </Collapse>
-      </Box>
+  useEffect( () => {
+      setAlert(
+        <Box sx={{
+            width: '50%',
+            position: 'absolute',
+            top: 60,
+            left: '20%'
+        }}>
+            <Collapse in={send}>
+                <Alert
+                    severity="success"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setSend(false);
+                            }}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                >
+                    Successfully send email to your friend/s!
+                </Alert>
+            </Collapse>
+        </Box>
     );
-  }, [send]);
+  }, [send])
 
   // Function to toggle user's checked status
   const toggleCheckedUser = (user) => {
@@ -94,31 +92,33 @@ const EventCard = ({ event, user }) => {
     loadAllUsers();
   }, [allUsers]);
 
-  const sendEmail = async (from_user, to_user, message, concert_name) => {
-    console.log("from user is", from_user);
+  const sendEmail = async (from_user, to_user, message) => {
     const templateParams = {
       to_name: to_user.name,
       to_email: to_user.email,
-      from_name: from_user.user.displayName,
-      concert_name: concert_name,
+      from_email: from_user.email,
+      from_name: user.name,
       message: message,
 
       // Add any other template variables you need for your email
     };
 
     await emailjs
-      .send(
+      .sendForm(
         "service_kxn71pt",
         "template_wtsmvnr",
         templateParams,
         "bbc4c12GJuBCsPiDl"
       )
-      .then(
-        (result) => {},
-        (error) => {
-          console.log("FAILED...", error.text);
-        }
-      );
+      .then(() => {
+        setValues({
+          name: "",
+          email: "",
+          message: "",
+        });
+      });
+    setLoading(false);
+    setSuccess(true);
   };
 
   const handleSendEmails = () => {
@@ -127,10 +127,8 @@ const EventCard = ({ event, user }) => {
     // Iterate through the checkedUsers and call sendEmail for each user
     checkedUsers.forEach((user) => {
       console.log("sending email for ", user.name, "email is", user.email);
-      sendEmail(currentuser, user, message.current, event.name);
+      sendEmail(currentuser, user, message);
     });
-
-    setCheckedUsers([]); // Clear the checkedUsers list
   };
 
   return (
@@ -159,7 +157,7 @@ const EventCard = ({ event, user }) => {
             title={event.seatmap.staticUrl}
             href={event.seatmap.staticUrl}
             target="_blank"
-            className="text-center font-normal text-gray-700 line-clamp-4 text-white  md:text-start md:line-clamp-6"
+            className="text-center font-normal text-gray-700 line-clamp-4 text-gray-400  md:text-start md:line-clamp-6"
           >
             SeatMap
           </a>
@@ -167,7 +165,7 @@ const EventCard = ({ event, user }) => {
             title={event.url}
             href={event.url}
             target="_blank"
-            className="text-center font-normal text-gray-700 line-clamp-4 text-white md:text-start md:line-clamp-6"
+            className="text-center font-normal text-gray-700 line-clamp-4 text-gray-400 md:text-start md:line-clamp-6"
           >
             TicketMaster
           </a>
@@ -192,7 +190,7 @@ const EventCard = ({ event, user }) => {
               return (
                 <span
                   key={index}
-                  className="me-1 inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                  className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
                 >
                   <input
                     type="checkbox"

@@ -34,11 +34,8 @@ export const Login = () => {
   };
 
   return (
-    <button
-      className="w-full text-center py-3 rounded bg-cyan-600 text-white hover:bg-green-dark focus:outline-none my-1"
-      onClick={signIn}
-    >
-      <span>Lets find you a buddy!</span>
+    <button onClick={signIn}>
+      <span>Sign In</span>
     </button>
   );
 };

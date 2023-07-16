@@ -22,7 +22,7 @@ function PreferencePage() {
       <div className="flex flex-col">
         <h1 className="text-gray-600 text-3xl text-extrabold md:text-4xl lg:text-5xl mt-8 uppercase text-center">
           Add your{" "}
-          <span className="px-2 text-white bg-blue-600 rounded dark:bg-cyan-600">
+          <span className="px-2 text-white bg-blue-600 rounded dark:bg-cyan-800">
             preferences
           </span>
         </h1>
