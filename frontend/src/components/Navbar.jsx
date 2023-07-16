@@ -17,11 +17,11 @@ export const Navbar = () => {
 
   return (
     <nav className="flex items-center justify-between flex-wrap bg-secondary p-6">
-      <span className="logo">E-P</span>
+      <span className="font-bold text-3xl text-gray-700">EventBuddy</span>
 
       <ul className="flex">
         <li className="mr-6">
-          {!user ? <Login /> : <button onClick={handleClick}>Logout</button>}
+          {!user ? "" : <button onClick={handleClick}>Logout</button>}
         </li>
       </ul>
     </nav>

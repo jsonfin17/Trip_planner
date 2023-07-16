@@ -159,7 +159,7 @@ const EventCard = ({ event, user }) => {
             title={event.seatmap.staticUrl}
             href={event.seatmap.staticUrl}
             target="_blank"
-            className="text-center font-normal text-gray-700 line-clamp-4 text-gray-400  md:text-start md:line-clamp-6"
+            className="text-center font-normal text-gray-700 line-clamp-4 text-white  md:text-start md:line-clamp-6"
           >
             SeatMap
           </a>
@@ -167,7 +167,7 @@ const EventCard = ({ event, user }) => {
             title={event.url}
             href={event.url}
             target="_blank"
-            className="text-center font-normal text-gray-700 line-clamp-4 text-gray-400 md:text-start md:line-clamp-6"
+            className="text-center font-normal text-gray-700 line-clamp-4 text-white md:text-start md:line-clamp-6"
           >
             TicketMaster
           </a>
