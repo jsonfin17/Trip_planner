@@ -57,7 +57,7 @@ function Form() {
   // };
 
   return (
-    <div id="container">
+    <div className="place-self-center w-2/4 mt-6 px-4 py-2 text-gray-700 uppercase bg-secondary rounded-2xl shadow-lg shadow-indigo-500/40">
       {/* <div id="tabs" className="mb-8 mt-6">
         <button
           class="inline mx-8 ps-6 pe-6 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded shadow"
