@@ -1,7 +1,12 @@
 import sqlite3
 import csv
 import os
-from flask import Flask, render_template, redirect, url_for, g, request, flash, session, send_from_directory
+from datetime import datetime
+
+import jwt
+import requests
+from flask import Flask, render_template, redirect, url_for, g, request, flash, session, send_from_directory, jsonify
+from flask import Flask, Response, render_template, redirect, url_for, g, request, flash, session, send_from_directory, json
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
@@ -14,60 +19,101 @@ dict = {'hello':'2', 'world':'1'}
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+def encode_auth_token(self, user_id):
+    """
+    Generates the Auth Token
+    :return: string
+    """
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        )
+    except Exception as e:
+        return e
+
+def decode_auth_token(auth_token):
+    """
+    Decodes the auth token
+    :param auth_token:
+    :return: integer|string
+    """
+    try:
+        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+        return payload['sub']
+    except jwt.ExpiredSignatureError:
+        return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+        return 'Invalid token. Please log in again.'
 
 
 @app.route('/')
 def index():
-    if not check_login():
-        return redirect(url_for('login'))
-    return 'hello'
+    return dict
 
 
-@app.route('/login', methods=['post', 'get'])
+@app.route('/login', methods=['post'])
 def login():
-    if check_login():
-        return redirect(url_for('index'))
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        res = request.json
+        username = res["username"]
+        password = res['password']
         g.db = sqlite3.connect(database)
         correct_password = g.db.execute("SELECT password FROM user WHERE username = ?", (username, )).fetchone()
         if correct_password == None:
-            flash("The user isn't registered yet!")
+            return "The user isn't registered yet!", 401
         elif check_password_hash(correct_password[0], password):
-            flash("Login sucessfully!")
             session['user_id'] = username
-            return redirect(url_for('index'))
+            return "Login sucessfully!", 200
         else:
             print(correct_password, password)
-            flash("Password incorrect")
-    return render_template('login.html')
+            return "Password incorrect", 401
 
 
 
-@app.route('/register', methods = ['post', 'get'])
+@app.route('/register', methods = ['post'])
 def register():
-    if check_login():
-        return redirect(url_for('index'))
     if request.method == 'POST':
         try:
-            username = request.form['username']
-            password = request.form['password']
+            res = request.json
+            username = res["username"]
+            password = res['password']
             g.db = sqlite3.connect(database)
             g.db.execute('INSERT INTO user (username, password) VALUES (?, ?)', (username, generate_password_hash(password)))
             g.db.commit()
-            return redirect(url_for('login'))
+            return "success",200
         except Exception as e:
             print(e)
-            return redirect(url_for('register'))
-    return render_template('register.html')
+            return "2", 200
+    return "success",200
 
 
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    return "success", 200
+
+@app.route('/local-events')
+def events():
+    api_url = 'https://app.ticketmaster.com/discovery/v2/events.json?countryCode=AU&apikey=EbxJQ4zJdpA2AH8Rv6ONYPGfwsHsoKZA'
+    #api_key = '	EbxJQ4zJdpA2AH8Rv6ONYPGfwsHsoKZA'  # Replace with your actual Ticketmaster API key
+
+    # Make the request to the Ticketmaster API
+    response = requests.get(api_url)
+
+    if response.status_code == 200:
+        data = response.json()
+        aus_events = data.get('_embedded')
+        return jsonify(aus_events.get('events'))
+    else:
+        return jsonify({'error': 'Failed to fetch data from Ticketmaster API.'}), response.status_code
 
 
 @app.route('/preference', methods = ['post', 'get'])
