@@ -3,10 +3,49 @@ import { Link } from "react-router-dom";
 import useCollection from "../services/useCollection";
 import getUser from "../services/getUser";
 import emailjs from "@emailjs/browser";
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const EventCard = ({ event, user }) => {
   const [checkedUsers, setCheckedUsers] = useState([]);
   const message = useRef("");
+  const [send, setSend] = useState(false);
+  const [alert, setAlert] = useState(<p></p>);
+
+  useEffect( () => {
+      setAlert(
+        <Box sx={{
+            width: '50%',
+            position: 'absolute',
+            top: 60,
+            left: '20%'
+        }}>
+            <Collapse in={send}>
+                <Alert
+                    severity="success"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setSend(false);
+                            }}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                >
+                    Successfully send email to your friend/s!
+                </Alert>
+            </Collapse>
+        </Box>
+    );
+  }, [send])
 
   // Function to toggle user's checked status
   const toggleCheckedUser = (user) => {
@@ -83,6 +122,7 @@ const EventCard = ({ event, user }) => {
   };
 
   const handleSendEmails = () => {
+    setSend(true);
     console.log("send email called!");
     // Iterate through the checkedUsers and call sendEmail for each user
     checkedUsers.forEach((user) => {
@@ -93,6 +133,7 @@ const EventCard = ({ event, user }) => {
 
   return (
     <div>
+      {alert}
       {event ? (
         <div
           to={`/events/${event.name}`}
