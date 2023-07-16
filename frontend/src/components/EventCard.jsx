@@ -6,7 +6,7 @@ import emailjs from "@emailjs/browser";
 
 const EventCard = ({ event, user }) => {
   const [checkedUsers, setCheckedUsers] = useState([]);
-  const message = useRef("");
+  const message = useRef("Come to the concert ya bugger");
 
   // Function to toggle user's checked status
   const toggleCheckedUser = (user) => {
@@ -53,33 +53,31 @@ const EventCard = ({ event, user }) => {
     loadAllUsers();
   }, [allUsers]);
 
-  const sendEmail = async (from_user, to_user, message) => {
+  const sendEmail = async (from_user, to_user, message, concert_name) => {
+    console.log("from user is", from_user);
     const templateParams = {
       to_name: to_user.name,
       to_email: to_user.email,
-      from_email: from_user.email,
-      from_name: user.name,
+      from_name: from_user.user.displayName,
+      concert_name: concert_name,
       message: message,
 
       // Add any other template variables you need for your email
     };
 
     await emailjs
-      .sendForm(
+      .send(
         "service_kxn71pt",
         "template_wtsmvnr",
         templateParams,
         "bbc4c12GJuBCsPiDl"
       )
-      .then(() => {
-        setValues({
-          name: "",
-          email: "",
-          message: "",
-        });
-      });
-    setLoading(false);
-    setSuccess(true);
+      .then(
+        (result) => {},
+        (error) => {
+          console.log("FAILED...", error.text);
+        }
+      );
   };
 
   const handleSendEmails = () => {
@@ -87,8 +85,10 @@ const EventCard = ({ event, user }) => {
     // Iterate through the checkedUsers and call sendEmail for each user
     checkedUsers.forEach((user) => {
       console.log("sending email for ", user.name, "email is", user.email);
-      sendEmail(currentuser, user, message);
+      sendEmail(currentuser, user, message.current, event.name);
     });
+
+    setCheckedUsers([]); // Clear the checkedUsers list
   };
 
   return (
@@ -149,7 +149,7 @@ const EventCard = ({ event, user }) => {
               return (
                 <span
                   key={index}
-                  className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                  className="me-1 inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
                 >
                   <input
                     type="checkbox"
