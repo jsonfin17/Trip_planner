@@ -36,6 +36,16 @@ script = (
         category INTEGER NOT NULL,
         weighting INTEGER NOT NULL CHECK ((weighting <= 10) and (weighting >= 0)),
         FOREIGN KEY (username) REFERENCES user(username));
+    
+        
+    DROP TABLE IF EXISTS friends;
+    CREATE TABLE friends(
+        user1 TEXT NOT NULL,
+        user2 TEXT NOT NULL, 
+        FOREIGN KEY (user1) REFERENCES user(username),
+        FOREIGN KEY (user2) REFERENCES user(username)
+    );
+
     """
 )
 conn.executescript(script)
