@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Form from "../components/Form";
 import getUser from "../services/getUser";
 import { useNavigate } from "react-router-dom";
+import { Navbar } from "../components/Navbar";
 
 function Home() {
   const user = getUser();
@@ -17,7 +18,8 @@ function Home() {
 
   return (
     <>
-      <div className="bg-secondary text-center">
+      <Navbar />
+      <div className="text-center">
         <h1 className="text-primary">Travel-Planner</h1>
         <Form />
       </div>

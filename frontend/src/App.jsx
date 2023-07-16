@@ -7,7 +7,7 @@ import EventsPage from "./pages/EventsPage";
 
 function App() {
   useEffect(() => {
-    document.body.classList.add("bg-secondary");
+    document.body.classList.add("bg-background");
   }, []);
 
   return (
