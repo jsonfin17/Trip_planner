@@ -148,21 +148,26 @@ def preference():
 
 @app.route('/search-friends')
 def search_friends():
-    user = session.get('user_id')
-    print(user)
+    res = request.json
+    user = res["username"]
     g.db = sqlite3.connect(database)
-    results = g.db.execute('SELECT username FROM user').fetchall()
+    results = g.db.execute('SELECT username FROM user WHERE username <> ?', (user, )).fetchall()
     users = []
     for user in results:
-        print('debug')
         users.append(user)
-    print(users)
     return jsonify(results), 200
+
+
+@app.route('/')
 
 
 @app.route('/friends')
 def friends():
-    return 'not done yet'
+    res = request.json
+    user = res["name"]
+    g.db = sqlite3.connect(database)
+    results = g.db.execute("SELECT user1 AS friend FROM friends WHERE user2 = ? UNION SELECT user2 AS friend FROM friends WHERE user1 = ?;", (user, user,)).fetchall()
+    return jsonify(results), 200
 
 
 @app.route('/result')
@@ -170,8 +175,8 @@ def result():
     return 'hello'
 
 
-def weighting():
-    return 'hello'
+#def weighting():
+    
 
 
 def check_login():
