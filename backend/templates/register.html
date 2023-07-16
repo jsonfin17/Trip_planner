@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% block head %}
+    <title>登入</title>
+{% endblock %}
+
+{% block content %}
+<h3>Register</h3>
+<form method="post">
+    <table>
+      <tbody>
+      <tr>
+      <td><label for="username">username</label></td>
+      <td><input name="username" id="username" required></td><br>
+      </tr>
+      <tr>
+      <td><label for="password">password</label></td>
+      <td><input type="password" name="password" id="password" required></td>
+      </tr>
+      </tbody>
+    </table>
+    <br>
+    <input type="submit" value="Register">
+    </form>
+{% endblock %}

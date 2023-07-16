@@ -1,14 +1,22 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useState, useEffect } from "react";
 import "./App.css";
+import Home from "./pages/Home";
+import PreferencePage from "./pages/PreferencePAge";
+import { Routes, Route } from "react-router-dom";
+import EventsPage from "./pages/EventsPage";
 
 function App() {
+  useEffect(() => {
+    document.body.classList.add("bg-background");
+  }, []);
+
   return (
     <>
-      <div>
-        <h1>Travel-Planner</h1>
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/preference" element={<PreferencePage />} />
+        <Route path="/events" element={<EventsPage />} />"
+      </Routes>
     </>
   );
 }
