@@ -1,0 +1,19 @@
+<form method="post">
+  {% for row in data %}
+  <input
+    type="range"
+    min="0"
+    max="10"
+    value="0"
+    class="slider"
+    id="{{row}}"
+    name="{{row}}"
+    oninput="this.nextElementSibling.value = this.value"
+  />
+  <output>0</output>
+  <label for="{{row}}">{{row}}</label>
+  <p>{{data[row]}}</p>
+  <br />
+  {% endfor %}
+  <button type="submit" name="submit">submit</button>
+</form>
