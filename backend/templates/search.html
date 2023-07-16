@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+
+{% block head %}
+    <title>Search Friends</title>
+{% endblock %}
+
+{% block content %}
+<h3>Search Friends</h3>
+{% for user in data %}
+<p>{{user}}</p>
+{% endfor %}
+{% endblock %}
