@@ -12,7 +12,9 @@ function Slider(activityName) {
 
   return (
     <div className="mt-4 font-medium">
-      <div className="inline w-16">{activityName.activityName}</div>
+      <div className="inline w-16 text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-sky-600 from-cyan-800">
+        {activityName.activityName}
+      </div>
       <input
         id="minmax-range"
         type="range"
@@ -26,7 +28,10 @@ function Slider(activityName) {
           updateTextInput(e);
         }}
       />
-      <label className="boxeslevel" htmlFor="text">
+      <label
+        className="boxeslevel text-white border-radius:50% text-xl rounded-full"
+        htmlFor="text"
+      >
         {value}
       </label>
     </div>

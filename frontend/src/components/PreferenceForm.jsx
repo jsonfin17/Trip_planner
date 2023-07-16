@@ -11,7 +11,7 @@ function PreferenceForm() {
       })}
       <button
         type="submit"
-        className="w-full mt-6 text-center py-3 rounded bg-cyan-800 text-white hover:bg-green-dark focus:outline-none my-1"
+        className="w-full font-extrabold uppercase mt-6 text-center py-3 rounded bg-cyan-800 text-white hover:bg-green-dark focus:outline-none my-1"
       >
         Submit
       </button>
