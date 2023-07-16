@@ -145,7 +145,8 @@ def preference():
 
 @app.route('/search-friends')
 def search_friends():
-    user = session.get('user_id')
+    res = request.json
+    user = res["username"]
     g.db = sqlite3.connect(database)
     results = g.db.execute('SELECT username FROM user WHERE username <> ?', (user, )).fetchall()
     users = []
@@ -159,7 +160,8 @@ def search_friends():
 
 @app.route('/friends')
 def friends():
-    user = session.get('user_id')
+    res = request.json
+    user = res["username"]
     g.db = sqlite3.connect(database)
     results = g.db.execute("SELECT user1 AS friend FROM friends WHERE user2 = ? UNION SELECT user2 AS friend FROM friends WHERE user1 = ?;", (user, user,)).fetchall()
     return jsonify(results), 200
