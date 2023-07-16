@@ -15,6 +15,7 @@ function PreferenceForm() {
           className="inline-block pl-[0.15rem] hover:cursor-pointer"
           htmlFor="flexCheckIndeterminate"
         >
+          for (const actitivy of actitivy){activity}
           Indeterminate checkbox
         </label>
       </div>

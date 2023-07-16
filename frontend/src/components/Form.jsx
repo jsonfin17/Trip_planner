@@ -60,14 +60,14 @@ function Form() {
     <div id="container">
       {/* <div id="tabs" className="mb-8 mt-6">
         <button
-          className="inline mx-8 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded shadow"
+          class="inline mx-8 ps-6 pe-6 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded shadow"
           onClick={() => toggleLogin()}
           data-toggle="tab"
         >
           Login
         </button>
         <button
-          className="inline bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded shadow"
+          class="inline ps-4 pe-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded shadow"
           onClick={() => toggleRegister()}
           data-toggle="tab"
         >
@@ -78,6 +78,13 @@ function Form() {
       {/* {showLogin && (
         <div className="tab-content" id="cont">
           <div className="tab-pane active" id="signIn">
+            <input
+              id="su"
+              type="email"
+              class="block border border-grey-light w-full p-3 rounded mb-4"
+              placeholder="Account Name"
+              required
+            />
             <input
               id="se"
               type="email"
@@ -114,6 +121,13 @@ function Form() {
       {/* Second tab */}
       {/* {showReg && (
         <div className="tab-pane" id="register">
+          <input
+            className="block border border-grey-light w-full p-3 rounded mb-4"
+            id="re"
+            type="email"
+            placeholder="Account Name"
+            required
+          />
           <input
             className="block border border-grey-light w-full p-3 rounded mb-4"
             id="re"
