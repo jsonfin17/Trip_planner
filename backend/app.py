@@ -70,13 +70,13 @@ def login():
         g.db = sqlite3.connect(database)
         correct_password = g.db.execute("SELECT password FROM user WHERE username = ?", (username, )).fetchone()
         if correct_password == None:
-            return "The user isn't registered yet!", 401
+            return jsonify({"message":"The user isn't registered yet!"}, 401)
         elif check_password_hash(correct_password[0], password):
             session['user_id'] = username
-            return "Login sucessfully!", 200
+            return jsonify({"message":"Login sucessfully!"}, 200)
         else:
             print(correct_password, password)
-            return "Password incorrect", 401
+            return jsonify({"message":"Password incorrect"}, 401)
 
 
 
@@ -90,11 +90,11 @@ def register():
             g.db = sqlite3.connect(database)
             g.db.execute('INSERT INTO user (username, password) VALUES (?, ?)', (username, generate_password_hash(password)))
             g.db.commit()
-            return "success",200
+            return jsonify({"message":"success"},200)
         except Exception as e:
             print(e)
-            return "2", 200
-    return "success",200
+            return jsonify({"message":"account already exists"},400)
+    return jsonify({"message":"success"},200)
 
 
 
