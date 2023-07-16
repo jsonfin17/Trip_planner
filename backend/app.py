@@ -70,10 +70,11 @@ def login():
             return "The user isn't registered yet!", 401
         elif check_password_hash(correct_password[0], password):
             session['user_id'] = username
-            return "Login sucessfully!", 200
+            return redirect(url_for('index')), 200
         else:
             print(correct_password, password)
             return "Password incorrect", 401
+    return "success", 200
 
 
 
@@ -91,14 +92,14 @@ def register():
         except Exception as e:
             print(e)
             return "2", 200
-    return "success",200
+    return redirect(url_for('register')),200
 
 
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return "success", 200
+    return redirect(url_for('login')), 200
 
 @app.route('/local-events')
 def events():
@@ -133,24 +134,27 @@ def preference():
                 score = request.form[item]
                 g.db.execute('INSERT INTO preference VALUES (?, ?, ?)', (username, item, score, ))
                 g.db.commit()
-                print('update preference successfully!')
-            return '<p>hello!</p>'
+            return 'update preference successfully!', 200
             
         except Exception as e:
             print(e)
             return 'error'
-    return render_template('preference.html', data = category)
+    return jsonify(category), 200
 
 
 
 @app.route('/search-friends')
 def search_friends():
     user = session.get('user_id')
-    results = g.db.execute('SELECT username FROM user WHERE user <> ?', (user, ))
+    print(user)
+    g.db = sqlite3.connect(database)
+    results = g.db.execute('SELECT username FROM user').fetchall()
     users = []
     for user in results:
+        print('debug')
         users.append(user)
-    return render_template('search.html', data = users)
+    print(users)
+    return jsonify(results), 200
 
 
 @app.route('/friends')
